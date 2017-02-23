@@ -20,5 +20,5 @@ before_install:
 - gem install bundler -v 1.13.7
 - bundle install
 
-install: "echo 'Skip    Install'"
+install: "echo $PWD"
 script: ruby -Ilib exe/rake
