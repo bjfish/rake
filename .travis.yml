@@ -1,20 +1,24 @@
-language: ruby
+language: java
 sudo: false
-rvm:
-  - 2.0.0
-  - 2.1.10
-  - 2.2.6
-  - 2.3.3
-  - 2.4.0
-  - ruby-head
-  - jruby-9.1.6.0
-  - jruby-head
+cache: bundler
+jdk: oraclejdk8
+
 before_install:
-  - gem install bundler --no-document -v '~> 1.13.3'
-before_script:
-  - unset JRUBY_OPTS
+- git clone https://github.com/graalvm/mx --depth 1
+- export PATH=$PWD/mx:$PATH
+- git clone https://github.com/graalvm/truffleruby
+- cd truffleruby
+- echo MX_BINARY_SUITES=truffle >> mx.jruby/env
+- echo JAVA_HOME=$JAVA_HOME >> mx.jruby/env
+- mx build
+- "> ~/.rvm/gemsets/global.gems"
+- "> ~/.rvm/gemsets/default.gems"
+- rvm mount $PWD -n truffleruby
+- rvm use ext-truffleruby
+- export RUBYOPT=-ropenssl-stubs
+- gem uninstall bundler -a -x
+- gem install bundler -v 1.13.7
+- bundle install
+
+install: "echo 'Skip  Install'"
 script: ruby -Ilib exe/rake
-notifications:
-  email:
-  - hsbt@ruby-lang.org
-  - drbrain@segment7.net
