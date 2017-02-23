@@ -18,6 +18,7 @@ before_install:
 - export RUBYOPT=-ropenssl-stubs
 - gem uninstall bundler -a -x
 - gem install bundler -v 1.13.7
+- cd ..
 - bundle install
 
 install: "echo $PWD"
